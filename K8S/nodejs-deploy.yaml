@@ -11,8 +11,8 @@ metadata:
   namespace: demo
 spec:
   ports:
-  - port: 80
-    targetPort: 3000
+  - port: 8080
+    targetPort: 8080
   selector:
     app: erog-app
   type: LoadBalancer
@@ -35,7 +35,7 @@ spec:
             service:
               name: nodejs-app-svc
               port:
-                number: 80
+                number: 8080
           path: /
 ---
 
@@ -45,7 +45,7 @@ metadata:
   name: nodejs-app-deploy
   namespace: demo
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: nodejs-app
@@ -58,4 +58,4 @@ spec:
       - name: nodejs-app
         image: 1020636/nodejs:v4-20240115063613
         ports:
-        - containerPort: 3000
+        - containerPort: 8080
