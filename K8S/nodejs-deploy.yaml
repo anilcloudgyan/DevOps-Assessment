@@ -27,7 +27,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: nodejs-demo.Wohlig.com
+  - host: nodejs-demo.wohlig.com
     http:
       paths:
         - pathType: Prefix
