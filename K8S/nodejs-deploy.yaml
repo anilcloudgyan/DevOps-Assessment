@@ -25,6 +25,7 @@ metadata:
   namespace: demo
   annotations:
     kubernetes.io/ingress.class: nginx
+    kubectl patch svc ingress-nginx-controller -n ingress-nginx -p '{"spec": {"ports": [{"name": "http", "port": 80, "targetPort": 8080}]}}
 spec:
   rules:
   - host: nodejs-demo.wohlig.com
