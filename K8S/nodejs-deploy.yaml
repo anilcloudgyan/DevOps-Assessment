@@ -14,7 +14,7 @@ spec:
   - port: 8080
     targetPort: 8080
   selector:
-    app: erog-app
+    app: nodejs-app
   type: LoadBalancer
 ---
 
