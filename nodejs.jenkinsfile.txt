@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define a timestamp variable for unique tagging
+        IMAGE_TAG = "v${env.BUILD_NUMBER}-${new Date().format("yyyyMMddHHmmss")}"
+        DOCKER_IMAGE_NAME = "1020636/nodejs"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    git 'https://your-git-repo-url.git'
+                }
+            }
+        }
+
+        stage('NPM Install') {
+            steps {
+                script {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                script {
+                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
+                        sh "docker build -t ${DOCKER_IMAGE_NAME}:${IMAGE_TAG} ."
+                        sh "docker push ${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
+         stage('Docker Scout Image') {
+            steps {
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
+                       sh 'docker-scout quickview ${DOCKER_IMAGE_NAME}:${IMAGE_TAG}'
+                       sh 'docker-scout cves ${DOCKER_IMAGE_NAME}:${IMAGE_TAG}'
+                       sh 'docker-scout recommendations ${DOCKER_IMAGE_NAME}:${IMAGE_TAG}'
+                   }
+                }   
+            }
+        }
+
+        stage('Deploy to kubernets'){
+            steps{
+                script{
+                    dir('K8S') {
+                        withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                        sh "kubectl apply -f nodejs-deploy.yaml --record=true --set image.tag=${IMAGE_TAG}"
+
+                        }   
+                    }
+                }
+      }
+  }
