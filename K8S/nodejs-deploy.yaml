@@ -56,6 +56,6 @@ spec:
     spec:
       containers:
       - name: nodejs-app
-        image: 1020636/nodejs:${IMAGE_TAG}
+        image: 1020636/nodejs:v4-20240115063613
         ports:
         - containerPort: 3000
