@@ -11,7 +11,7 @@ metadata:
   namespace: demo
 spec:
   ports:
-  - port: 8080
+  - port: 80
     targetPort: 8080
   selector:
     app: nodejs-app
@@ -25,7 +25,6 @@ metadata:
   namespace: demo
   annotations:
     kubernetes.io/ingress.class: nginx
-    kubectl patch svc ingress-nginx-controller -n ingress-nginx -p '{"spec": {"ports": [{"name": "http", "port": 80, "targetPort": 8080}]}}
 spec:
   rules:
   - host: nodejs-demo.wohlig.com
@@ -36,7 +35,7 @@ spec:
             service:
               name: nodejs-app-svc
               port:
-                number: 8080
+                number: 80
           path: /
 ---
 
